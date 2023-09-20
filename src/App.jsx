@@ -7,8 +7,6 @@ function App() {
   const [long, setLong] = useState([])
   const [data, setData] = useState([])
 
-  const [isLoading, setIsLoading] = useState(false)
-
   useEffect(() => {
     // 1. Get location from browser
     // 2. Check if location is the same as last time
@@ -18,12 +16,17 @@ function App() {
     // 6. Save data to localstorage
 
     const fetchData = async () => {
-      setIsLoading(true)
-      navigator.geolocation.getCurrentPosition(function (position) {
+      console.log('fetching data', lat, long)
+      navigator.geolocation.getCurrentPosition((position) => {
         setLat(position.coords.latitude);
         setLong(position.coords.longitude);
       });
-
+      console.log('fetching data', lat, long)
+      if (lat.length === 0 || long.length === 0) {
+        console.log('no data')
+        setData([])
+        return
+      }
       await fetch(`${import.meta.env.VITE_API_URL}lat=${lat}&lon=${long}&appid=${import.meta.env.VITE_API_KEY}`)
         .then(res => res.json())
         .then(result => {
@@ -31,8 +34,6 @@ function App() {
           console.log(result)
         }).catch(err => {
           console.log(err)
-        }).finally(() => {
-          setIsLoading(false)
         })
     }
     fetchData()
@@ -46,9 +47,7 @@ function App() {
         <h1>DARTH VÄDER</h1>
       </header>
       <article>
-        {isLoading ? (
-          <Spinner />
-        ) : (typeof data.main !== 'undefined') ? (
+        {(typeof data.main !== 'undefined') ? (
           <div>
             <h2>{data.name}</h2>
             <p>Temprature: {data.main.temp}</p>
@@ -57,7 +56,7 @@ function App() {
             <p>Description: {data.weather[0].description}</p>
           </div>
         ) : (
-          <h2>no data</h2>
+          <Spinner />
         )}
       </article>
     </main>
