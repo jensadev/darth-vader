@@ -10,6 +10,13 @@ function App() {
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
+    // 1. Get location from browser
+    // 2. Check if location is the same as last time
+    // 3. If location is the same as last time, use data from localstorage
+    // 4. IF data is older than 10 minutes, fetch new data
+    // 5. If location is not the same as last time, fetch new data
+    // 6. Save data to localstorage
+
     const fetchData = async () => {
       setIsLoading(true)
       navigator.geolocation.getCurrentPosition(function (position) {
