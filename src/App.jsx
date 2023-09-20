@@ -41,8 +41,14 @@ function App() {
       <article>
         {isLoading ? (
           <Spinner />
-        ) : data ? (
-          <h2>data stuff</h2>
+        ) : (typeof data.main !== 'undefined') ? (
+          <div>
+            <h2>{data.name}</h2>
+            <p>Temprature: {data.main.temp}</p>
+            <p>Sunrise: {data.sys.sunrise}</p>
+            <p>Sunset: {data.sys.sunset}</p>
+            <p>Description: {data.weather[0].description}</p>
+          </div>
         ) : (
           <h2>no data</h2>
         )}
